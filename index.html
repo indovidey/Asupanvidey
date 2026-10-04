@@ -28,12 +28,12 @@
       align-items: center;
     }
 
-    video {
+    /* Menggunakan iframe agar video videy.co pasti tampil */
+    iframe {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      display: block;
-      pointer-events: none;
+      border: none;
+      pointer-events: none; /* Mencegah klik langsung ke video */
     }
 
     /* Styling Tombol Play Besar di Tengah */
@@ -149,11 +149,8 @@
 <body>
 
 <div class="container">
-  <!-- Pastikan link source di bawah ini adalah file .mp4 langsung -->
-  <video id="video" muted playsinline loop>
-    <source src="https://cdn.videy.co/r6JCvQxd1.mp4" type="video/mp4">
-    Browser kamu tidak mendukung video.
-  </video>
+  <!-- Menggunakan iframe videy agar langsung muncul player aslinya -->
+  <iframe id="video-iframe" src="https://videy.co/embed?id=r6JCvQxd1" allow="autoplay"></iframe>
 </div>
 
 <!-- Tombol Play Pertama (Sesuai Gambar) -->
@@ -175,30 +172,36 @@
 
 <script>
   const smartlinkURL = 'https://www.profitableratecpmnetwork.com/hh55phupz7?key=035891703dff41ba6e0911050a5989af';
-  const video = document.getElementById("video");
-  const playOverlay = document.getElementById("play-overlay");
   const popup = document.getElementById("popup-overlay");
+  const playOverlay = document.getElementById("play-overlay");
   let timer = null;
 
   function startTimer() {
     clearTimeout(timer);
     timer = setTimeout(function() {
-      video.pause();
       popup.style.display = "flex";
-    }, 5000); // Muncul popup setiap 5 detik
+    }, 5000); // Muncul popup konfirmasi usia setiap 5 detik
   }
 
   function initPlay() {
+    // Membuka smartlink iklan di tab baru saat tombol PLAY VIDEO ditekan
     window.open(smartlinkURL, '_blank');
+
+    // Hilangkan tombol play awal
     playOverlay.style.display = 'none';
-    video.play().catch(() => {});
+
+    // Mulai hitung mundur untuk memunculkan popup konfirmasi usia
     startTimer();
   }
 
   function handleAction() {
+    // Membuka smartlink iklan saat tombol BATAL / LANJUT diklik
     window.open(smartlinkURL, '_blank');
+
+    // Sembunyikan popup
     popup.style.display = 'none';
-    video.play().catch(() => {});
+
+    // Mulai timer kembali
     startTimer();
   }
 </script>
