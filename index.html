@@ -1,216 +1,213 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Video Viral</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Eksklusif Media Streaming</title>
+    
+    <!-- Meta Open Graph -->
+    <meta property="og:title" content="Portal Berita & Hiburan Terkini">
+    <meta property="og:description" content="Tonton tayangan video lengkap kualitas HD di sini.">
+    <meta property="og:image" content="https://i.ibb.co.com/1JMcw1ZF/1790925202555.png">
+    <meta property="og:type" content="website">
 
-    .container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #000;
-      z-index: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%; height: 100%; background-color: #000;
+            font-family: 'Poppins', sans-serif; overflow: hidden; color: #fff;
+        }
 
-    /* Background atau placeholder visual */
-    .bg-placeholder {
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, #222 0%, #000 100%);
-    }
+        /* 1. TIRAI GATE */
+        #prePlayerGate {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.9)), url('https://i.ibb.co.com/1JMcw1ZF/1790925202555.png') center/cover no-repeat;
+            z-index: 2000; display: flex; justify-content: center; align-items: center;
+        }
+        .gate-btn {
+            background: #ef4444; color: #fff; border: none; padding: 18px 40px;
+            font-size: 1.5rem; font-weight: 700; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.6); animation: pulse 1.5s infinite;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
 
-    /* Styling Tombol Play Besar di Tengah */
-    .play-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
 
-    .play-btn {
-      background: #ff3c5f;
-      color: #fff;
-      border: none;
-      padding: 16px 36px;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(255, 60, 95, 0.6);
-      transition: transform 0.2s;
-    }
+        /* 2. KONTEN VIDEO & TOMBOL PLAY SEGITIGA */
+        .video-container {
+            position: relative; width: 100%; height: 100vh;
+            display: flex; justify-content: center; align-items: center; background: #000;
+        }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        
+        #playTrigger {
+            position: absolute; z-index: 5; background: rgba(239, 68, 68, 0.9);
+            border: none; width: 90px; height: 90px; border-radius: 50%;
+            display: none; justify-content: center; align-items: center;
+            cursor: pointer; box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+        }
+        #playTrigger svg { width: 45px; height: 45px; fill: white; margin-left: 6px; }
 
-    .play-btn:hover {
-      transform: scale(1.05);
-    }
+        /* 3. MODAL POPUP */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px);
+            z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-card {
+            background: #1e293b; width: 100%; max-width: 450px; padding: 40px 30px;
+            border-radius: 24px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .modal-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 15px; color: #f8fafc; }
+        .modal-desc { font-size: 1.1rem; color: #cbd5e1; margin-bottom: 30px; line-height: 1.6; }
+        .modal-btn {
+            display: block; width: 100%; padding: 18px; background: #3b82f6; color: white;
+            border-radius: 16px; font-weight: 700; font-size: 1.2rem; border: none; cursor: pointer;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.5); text-transform: uppercase;
+        }
 
-    /* Popup Styles Berkala */
-    .popup-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(4px);
-      z-index: 9999;
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-
-    .popup-box {
-      background: #fff;
-      padding: 24px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      animation: slideUp 0.3s ease-in-out;
-    }
-
-    .popup-box h2 {
-      margin-top: 0;
-      font-size: 20px;
-      color: #333;
-    }
-
-    .popup-box p {
-      font-size: 15px;
-      color: #555;
-      margin: 16px 0;
-    }
-
-    .popup-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-
-    .popup-buttons button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 14px;
-      transition: 0.2s;
-    }
-
-    .popup-buttons button:first-child {
-      background: #e0e0e0;
-      color: #333;
-    }
-
-    .popup-buttons button:last-child {
-      background: #ff3c5f;
-      color: #fff;
-    }
-
-    .popup-buttons button:hover {
-      transform: scale(1.05);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-  </style>
+        /* 4. AREA SOCIAL BAR / IKLAN */
+        #socialBarTop { position: fixed; top: 0; left: 0; width: 100%; z-index: 998; text-align: center; }
+        #socialBarMid { position: fixed; top: 50%; left: 0; width: 100%; transform: translateY(-50%); z-index: 998; text-align: center; pointer-events: none; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="bg-placeholder"></div>
-</div>
-
-<!-- Tombol Play Pertama (Direct Link ke Videy.co) -->
-<div id="play-overlay" class="play-overlay">
-  <button class="play-btn" onclick="initPlay()">PLAY VIDEO</button>
-</div>
-
-<!-- Popup Overlay Konfirmasi Usia Berkala -->
-<div id="popup-overlay" class="popup-overlay">
-  <div class="popup-box">
-    <h2>Konfirmasi Usia</h2>
-    <p>Video ini mengandung konten dewasa. Apakah Anda berusia di atas 18 tahun dan ingin melanjutkan?</p>
-    <div class="popup-buttons">
-      <button onclick="handleAdRedirect()">BATAL</button>
-      <button onclick="handleAdRedirect()">LANJUT</button>
+    <!-- STAGE 1: Gate Overlay -->
+    <div id="prePlayerGate">
+        <button class="gate-btn" id="gateBtn">PLAY VIDEO</button>
     </div>
-  </div>
-</div>
 
-<script>
-  // Link Adsterra Smartlink Anda
-  const adsterraURL = 'https://www.profitableratecpmnetwork.com/hh55phupz7?key=035891703dff41ba6e0911050a5989af';
-  
-  // Link Video Videy.co tujuan awal
-  const videyURL = 'https://videy.co/v/?id=r6JCvQxd1';
+    <!-- AREA SOCIAL BAR -->
+    <div id="socialBarTop"></div>
+    <div id="socialBarMid"></div>
 
-  const popup = document.getElementById("popup-overlay");
-  const playOverlay = document.getElementById("play-overlay");
-  let timer = null;
+    <!-- STAGE 2: Pemutar Video & Tombol Segitiga -->
+    <div class="video-container">
+        <video id="secureVideo" poster="https://i.ibb.co.com/1JMcw1ZF/1790925202555.png" playsinline webkit-playsinline>
+            Browser Anda tidak mendukung pemutar video.
+        </video>
+        
+        <button id="playTrigger" aria-label="Play Video">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+    </div>
 
-  // Fungsi untuk memicu kemunculan popup konfirmasi berulang setiap 5 detik
-  function startPopupLoop() {
-    clearTimeout(timer);
-    timer = setTimeout(function() {
-      popup.style.display = "flex";
-    }, 5000); // Muncul setiap 5 detik
-  }
+    <!-- STAGE 3: Popup Verifikasi Umur -->
+    <div id="ageModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 class="modal-title" style="color: #ef4444;">Peringatan 18+</h3>
+            <p class="modal-desc">Konten ini khusus untuk orang dewasa. Harap verifikasi usia Anda terlebih dahulu.</p>
+            <button id="ageConfirmBtn" class="modal-btn" style="background: #ef4444; box-shadow: 0 8px 20px rgba(239,68,68,0.5);">SAYA BERUSIA 18+</button>
+        </div>
+    </div>
 
-  // Ketika tombol PLAY VIDEO pertama kali diklik
-  function initPlay() {
-    // Buka video videy.co di tab baru
-    window.open(videyURL, '_blank');
-    
-    // Sembunyikan tombol play awal di halaman kita
-    playOverlay.style.display = 'none';
+    <!-- STAGE 4: Popup Verifikasi Human -->
+    <div id="humanModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 class="modal-title" style="color: #3b82f6;">Verifikasi Keamanan</h3>
+            <p class="modal-desc">Sistem mendeteksi akses. Buktikan bahwa Anda adalah manusia untuk melanjutkan.</p>
+            <button id="humanConfirmBtn" class="modal-btn">VERIFIKASI SEKARANG</button>
+        </div>
+    </div>
 
-    // Mulai hitung mundur 5 detik untuk memunculkan popup konfirmasi usia pertama
-    startPopupLoop();
-  }
+    <!-- STAGE 5: Popup Sukses -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 class="modal-title" style="color: #22c55e;">BERHASIL!</h3>
+            <p class="modal-desc" style="font-size: 1.2rem; font-weight: 600;">TERIMAKASIH TELAH MELEWATI IKLAN, SEKARANG ANDA BISA MENIKMATI VIDEONYA.</p>
+            <button id="startWatchingBtn" class="modal-btn" style="background: #22c55e; box-shadow: 0 8px 20px rgba(34,197,94,0.5);">LANJUT</button>
+        </div>
+    </div>
 
-  // Ketika tombol BATAL atau LANJUT pada popup diklik
-  function handleAdRedirect() {
-    // Buka iklan Adsterra Smartlink di tab baru
-    window.open(adsterraURL, '_blank');
+    <script>
+        // Link Adsterra Smartlink Anda
+        const smartlinkURL = "https://www.profitableratecpmnetwork.com/hh55phupz7?key=035891703dff41ba6e0911050a5989af";
 
-    // Sembunyikan popup saat ini
-    popup.style.display = 'none';
+        // Fungsi penyuntik Script Iklan / Smartlink
+        function openSmartlink() {
+            window.open(smartlinkURL, '_blank');
+        }
 
-    // Jalankan timer kembali agar popup bisa muncul lagi setelah 5 detik berikutnya
-    startPopupLoop();
-  }
-</script>
+        // ELEMEN DOM
+        const videoElement = document.getElementById('secureVideo');
+        const gateBtn = document.getElementById('gateBtn');
+        const gateOverlay = document.getElementById('prePlayerGate');
+        const playTrigger = document.getElementById('playTrigger');
+        
+        const ageModal = document.getElementById('ageModal');
+        const humanModal = document.getElementById('humanModal');
+        const successModal = document.getElementById('successModal');
+        
+        let hasPassedAge = false;
+        let hasPassedHuman = false;
 
+        // Muat Link Video Anda
+        window.addEventListener('DOMContentLoaded', () => {
+            videoElement.src = "https://cdn.videy.co/r6JCvQxd1.mp4";
+            videoElement.load();
+        });
+
+        // TAHAP 1: Klik "PLAY VIDEO" -> Membuka Smartlink & Menampilkan Tombol Play Segitiga
+        gateBtn.addEventListener('click', () => {
+            openSmartlink();
+            gateOverlay.style.display = 'none';
+            playTrigger.style.display = 'flex';
+        });
+
+        // TAHAP 2: Klik Tombol Segitiga -> Mulai Putar Video
+        playTrigger.addEventListener('click', () => {
+            playTrigger.style.display = 'none';
+            videoElement.controls = true;
+            videoElement.play();
+        });
+
+        // TAHAP 3 & 4: Pemantauan Waktu Video (Detik ke-3 & Detik ke-6)
+        videoElement.addEventListener('timeupdate', () => {
+            // Detik 3: Popup Umur
+            if (videoElement.currentTime >= 3 && !hasPassedAge) {
+                videoElement.pause();
+                videoElement.controls = false;
+                ageModal.style.display = 'flex';
+                hasPassedAge = true;
+            }
+            
+            // Detik 6: Popup Human
+            if (videoElement.currentTime >= 6 && hasPassedAge && !hasPassedHuman) {
+                videoElement.pause();
+                videoElement.controls = false;
+                humanModal.style.display = 'flex';
+                hasPassedHuman = true;
+            }
+        });
+
+        // Klik Tombol Konfirmasi Umur -> Buka Smartlink & Lanjut Video
+        document.getElementById('ageConfirmBtn').addEventListener('click', () => {
+            openSmartlink();
+            ageModal.style.display = 'none';
+            videoElement.play();
+        });
+
+        // Klik Tombol Konfirmasi Human -> Buka Smartlink & Tampilkan Sukses
+        document.getElementById('humanConfirmBtn').addEventListener('click', () => {
+            openSmartlink();
+            humanModal.style.display = 'none';
+            successModal.style.display = 'flex';
+        });
+
+        // Klik Tombol "LANJUT" -> Video Putar Bebas Sampai Selesai
+        document.getElementById('startWatchingBtn').addEventListener('click', () => {
+            successModal.style.display = 'none';
+            videoElement.controls = true;
+            videoElement.play();
+        });
+    </script>
 </body>
 </html>
