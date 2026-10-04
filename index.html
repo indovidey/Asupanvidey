@@ -28,12 +28,11 @@
       align-items: center;
     }
 
-    /* Menggunakan iframe agar video videy.co pasti tampil */
-    iframe {
+    /* Background atau placeholder visual */
+    .bg-placeholder {
       width: 100%;
       height: 100%;
-      border: none;
-      pointer-events: none; /* Mencegah klik langsung ke video */
+      background: radial-gradient(circle, #222 0%, #000 100%);
     }
 
     /* Styling Tombol Play Besar di Tengah */
@@ -43,7 +42,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 9999;
       display: flex;
       justify-content: center;
@@ -149,60 +148,67 @@
 <body>
 
 <div class="container">
-  <!-- Menggunakan iframe videy agar langsung muncul player aslinya -->
-  <iframe id="video-iframe" src="https://videy.co/embed?id=r6JCvQxd1" allow="autoplay"></iframe>
+  <div class="bg-placeholder"></div>
 </div>
 
-<!-- Tombol Play Pertama (Sesuai Gambar) -->
+<!-- Tombol Play Pertama (Direct Link ke Videy.co) -->
 <div id="play-overlay" class="play-overlay">
   <button class="play-btn" onclick="initPlay()">PLAY VIDEO</button>
 </div>
 
-<!-- Popup Overlay Berkala -->
+<!-- Popup Overlay Konfirmasi Usia Berkala -->
 <div id="popup-overlay" class="popup-overlay">
   <div class="popup-box">
     <h2>Konfirmasi Usia</h2>
     <p>Video ini mengandung konten dewasa. Apakah Anda berusia di atas 18 tahun dan ingin melanjutkan?</p>
     <div class="popup-buttons">
-      <button onclick="handleAction()">BATAL</button>
-      <button onclick="handleAction()">LANJUT</button>
+      <button onclick="handleAdRedirect()">BATAL</button>
+      <button onclick="handleAdRedirect()">LANJUT</button>
     </div>
   </div>
 </div>
 
 <script>
-  const smartlinkURL = 'https://www.profitableratecpmnetwork.com/hh55phupz7?key=035891703dff41ba6e0911050a5989af';
+  // Link Adsterra Smartlink Anda
+  const adsterraURL = 'https://www.profitableratecpmnetwork.com/hh55phupz7?key=035891703dff41ba6e0911050a5989af';
+  
+  // Link Video Videy.co tujuan awal
+  const videyURL = 'https://videy.co/v/?id=r6JCvQxd1';
+
   const popup = document.getElementById("popup-overlay");
   const playOverlay = document.getElementById("play-overlay");
   let timer = null;
 
-  function startTimer() {
+  // Fungsi untuk memicu kemunculan popup konfirmasi berulang setiap 5 detik
+  function startPopupLoop() {
     clearTimeout(timer);
     timer = setTimeout(function() {
       popup.style.display = "flex";
-    }, 5000); // Muncul popup konfirmasi usia setiap 5 detik
+    }, 5000); // Muncul setiap 5 detik
   }
 
+  // Ketika tombol PLAY VIDEO pertama kali diklik
   function initPlay() {
-    // Membuka smartlink iklan di tab baru saat tombol PLAY VIDEO ditekan
-    window.open(smartlinkURL, '_blank');
-
-    // Hilangkan tombol play awal
+    // Buka video videy.co di tab baru
+    window.open(videyURL, '_blank');
+    
+    // Sembunyikan tombol play awal di halaman kita
     playOverlay.style.display = 'none';
 
-    // Mulai hitung mundur untuk memunculkan popup konfirmasi usia
-    startTimer();
+    // Mulai hitung mundur 5 detik untuk memunculkan popup konfirmasi usia pertama
+    startPopupLoop();
   }
 
-  function handleAction() {
-    // Membuka smartlink iklan saat tombol BATAL / LANJUT diklik
-    window.open(smartlinkURL, '_blank');
+  // Ketika tombol BATAL atau LANJUT pada popup diklik
+  function handleAdRedirect() {
+    // Buka iklan Adsterra Smartlink di tab baru
+    window.open(adsterraURL, '_blank');
 
-    // Sembunyikan popup
+    // Sembunyikan popup saat ini
     popup.style.display = 'none';
 
-    // Mulai timer kembali
-    startTimer();
+    // Jalankan timer kembali agar popup bisa muncul lagi setelah 5 detik berikutnya
+    startPopupLoop();
   }
 </script>
 
