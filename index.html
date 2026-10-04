@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Video Virall</title>
+  <title>Video Viral</title>
   <style>
     html, body {
       margin: 0;
@@ -33,12 +33,43 @@
       height: 100%;
       object-fit: contain;
       display: block;
-      pointer-events: none; /* Mencegah interaksi klik langsung ke video */
+      pointer-events: none;
     }
 
-    /* Popup Styles */
+    /* Styling Tombol Play Besar di Tengah */
+    .play-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .play-btn {
+      background: #ff3c5f;
+      color: #fff;
+      border: none;
+      padding: 16px 36px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 60, 95, 0.6);
+      transition: transform 0.2s;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Popup Styles Berkala */
     .popup-overlay {
-      display: flex; /* Langsung muncul di awal */
+      display: none; /* Disembunyikan dulu di awal */
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
@@ -118,14 +149,18 @@
 <body>
 
 <div class="container">
-  <!-- Tanpa controls dan autoplay, video bersih tanpa tombol play -->
   <video id="video" muted playsinline>
     <source src="https://videy.co/v/?id=r6JCvQxd1" type="video/mp4">
     Browser kamu tidak mendukung video.
   </video>
 </div>
 
-<!-- Popup Overlay (Muncul pertama kali saat halaman dibuka) -->
+<!-- Tombol Play Pertama (Sesuai Gambar) -->
+<div id="play-overlay" class="play-overlay">
+  <button class="play-btn" onclick="initPlay()">PLAY VIDEO</button>
+</div>
+
+<!-- Popup Overlay Berkala -->
 <div id="popup-overlay" class="popup-overlay">
   <div class="popup-box">
     <h2>Konfirmasi Usia</h2>
@@ -140,28 +175,38 @@
 <script>
   const smartlinkURL = 'https://www.profitableratecpmnetwork.com/hh55phupz7?key=035891703dff41ba6e0911050a5989af';
   const video = document.getElementById("video");
+  const playOverlay = document.getElementById("play-overlay");
   const popup = document.getElementById("popup-overlay");
   let timer = null;
 
   function startTimer() {
-    // Setiap video berjalan, set jeda 5 detik untuk memunculkan popup kembali
     clearTimeout(timer);
     timer = setTimeout(function() {
       video.pause();
       popup.style.display = "flex";
-    }, 5000); // 5000ms = 5 detik
+    }, 5000); // Muncul setiap 5 detik
   }
 
-  // Fungsi saat tombol BATAL atau LANJUT diklik
-  function handleAction() {
-    // Buka Smartlink Adsterra ke tab baru
+  // Fungsi saat tombol PLAY VIDEO pertama kali diklik
+  function initPlay() {
+    // Buka link tujuan di tab baru (bisa diganti link videy.co atau smartlink)
     window.open(smartlinkURL, '_blank');
 
-    // Sembunyikan popup dan putar video kembali
-    popup.style.display = 'none';
+    // Hilangkan tombol play awal
+    playOverlay.style.display = 'none';
+
+    // Putar video
     video.play().catch(() => {});
 
-    // Jalankan hitung mundur 5 detik berikutnya
+    // Mulai hitung mundur untuk popup berikutnya
+    startTimer();
+  }
+
+  // Fungsi saat tombol BATAL/LANJUT pada popup diklik
+  function handleAction() {
+    window.open(smartlinkURL, '_blank');
+    popup.style.display = 'none';
+    video.play().catch(() => {});
     startTimer();
   }
 </script>
