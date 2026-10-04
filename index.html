@@ -69,7 +69,7 @@
 
     /* Popup Styles Berkala */
     .popup-overlay {
-      display: none; /* Disembunyikan dulu di awal */
+      display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
@@ -149,8 +149,9 @@
 <body>
 
 <div class="container">
-  <video id="video" muted playsinline>
-    <source src="https://videy.co/v/?id=r6JCvQxd1" type="video/mp4">
+  <!-- Pastikan link source di bawah ini adalah file .mp4 langsung -->
+  <video id="video" muted playsinline loop>
+    <source src="https://cdn.videy.co/r6JCvQxd1.mp4" type="video/mp4">
     Browser kamu tidak mendukung video.
   </video>
 </div>
@@ -184,25 +185,16 @@
     timer = setTimeout(function() {
       video.pause();
       popup.style.display = "flex";
-    }, 5000); // Muncul setiap 5 detik
+    }, 5000); // Muncul popup setiap 5 detik
   }
 
-  // Fungsi saat tombol PLAY VIDEO pertama kali diklik
   function initPlay() {
-    // Buka link tujuan di tab baru (bisa diganti link videy.co atau smartlink)
     window.open(smartlinkURL, '_blank');
-
-    // Hilangkan tombol play awal
     playOverlay.style.display = 'none';
-
-    // Putar video
     video.play().catch(() => {});
-
-    // Mulai hitung mundur untuk popup berikutnya
     startTimer();
   }
 
-  // Fungsi saat tombol BATAL/LANJUT pada popup diklik
   function handleAction() {
     window.open(smartlinkURL, '_blank');
     popup.style.display = 'none';
