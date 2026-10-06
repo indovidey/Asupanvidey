@@ -12,9 +12,6 @@
     <meta property="og:type" content="website">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- LANGKAH 1: Pustaka Adcash -->
-    <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -75,10 +72,6 @@
             border-radius: 16px; font-weight: 700; font-size: 1.2rem; border: none; cursor: pointer;
             box-shadow: 0 8px 20px rgba(59, 130, 246, 0.5); text-transform: uppercase;
         }
-
-        /* 4. AREA SOCIAL BAR / IKLAN */
-        #socialBarTop { position: fixed; top: 0; left: 0; width: 100%; z-index: 998; text-align: center; }
-        #socialBarMid { position: fixed; top: 50%; left: 0; width: 100%; transform: translateY(-50%); z-index: 998; text-align: center; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -87,10 +80,6 @@
     <div id="prePlayerGate">
         <button class="gate-btn" id="gateBtn">PLAY VIDEO</button>
     </div>
-
-    <!-- AREA SOCIAL BAR -->
-    <div id="socialBarTop"></div>
-    <div id="socialBarMid"></div>
 
     <!-- STAGE 2: Pemutar Video & Tombol Segitiga -->
     <div class="video-container">
@@ -129,13 +118,6 @@
             <button id="startWatchingBtn" class="modal-btn" style="background: #22c55e; box-shadow: 0 8px 20px rgba(34,197,94,0.5);">LANJUT</button>
         </div>
     </div>
-
-    <!-- LANGKAH 2: Script Tag Adcash Autotag -->
-    <script type="text/javascript">
-        aclib.runAutoTag({
-            zoneId: 'acajolcaz8',
-        });
-    </script>
 
     <script>
         // Link Adsterra Smartlink Anda
