@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIDEX STREAM</title>
+    <title>VidexStream - Video Eksklusif</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -13,17 +13,9 @@
             transition: all 0.3s ease-in-out;
             opacity: 0;
             pointer-events: none;
-            transform: translateY(-10px);
-        }
-        #pushTop.active {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-        #pushBottom {
             transform: translateY(10px);
         }
-        #pushBottom.active {
+        .push-banner.active {
             transform: translateY(0);
             opacity: 1;
             pointer-events: auto;
@@ -51,14 +43,14 @@
     <!-- KONTEN UTAMA -->
     <main class="max-w-6xl mx-auto px-4 py-6 w-full flex-grow">
         
-        <!-- BAGIAN PEMUTAR VIDEO & PUSH DI DALAM LAYAR -->
+        <!-- BAGIAN PEMUTAR VIDEO -->
         <section class="mb-10">
             <h2 id="currentVideoTitle" class="text-xl md:text-2xl font-bold mb-3">Memuat Video...</h2>
             
             <!-- WADAH PEMUTAR VIDEO -->
             <div id="playerContainer" class="relative bg-black rounded-2xl overflow-hidden shadow-2xl aspect-video flex items-center justify-center">
                 
-                <!-- IN-PAGE PUSH ATAS -->
+                <!-- IN-PAGE PUSH ATAS (POLA AWAL) -->
                 <div id="pushTop" class="push-banner absolute top-3 left-3 right-3 z-30 bg-purple-950/90 backdrop-blur-md border border-purple-500/50 rounded-xl p-2.5 shadow-lg flex items-center justify-between gap-3">
                     <div class="flex items-center gap-2.5 cursor-pointer flex-grow overflow-hidden" onclick="triggerSmartlink()">
                         <div id="pushTopIcon" class="w-8 h-8 rounded-lg bg-purple-800 flex items-center justify-center text-base flex-shrink-0">🚀</div>
@@ -76,7 +68,7 @@
                 <!-- IFRAME PLAYER -->
                 <iframe id="mainVideoPlayer" src="" class="w-full h-full border-0" frameborder="0" allowfullscreen></iframe>
 
-                <!-- IN-PAGE PUSH BAWAH -->
+                <!-- IN-PAGE PUSH BAWAH (POLA AWAL) -->
                 <div id="pushBottom" class="push-banner absolute bottom-3 left-3 right-3 z-30 bg-emerald-950/90 backdrop-blur-md border border-emerald-500/50 rounded-xl p-2.5 shadow-lg flex items-center justify-between gap-3">
                     <div class="flex items-center gap-2.5 cursor-pointer flex-grow overflow-hidden" onclick="triggerSmartlink()">
                         <div id="pushBottomIcon" class="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-base flex-shrink-0">💎</div>
@@ -129,6 +121,22 @@
 
     </main>
 
+    <!-- IN-PAGE PUSH MELAYANG TETAP (FIXED) DI BAWAH DENGAN FOTO ADMIN & TEKS CHAT -->
+    <div id="floatingPush" class="push-banner fixed bottom-4 right-4 z-50 w-80 max-w-[calc(100vw-2rem)] bg-slate-800/95 backdrop-blur-md border border-rose-500/50 rounded-2xl p-3 shadow-2xl flex items-center gap-3">
+        <div class="relative cursor-pointer flex-shrink-0" onclick="triggerSmartlink()">
+            <img src="https://i.ibb.co.com/LhY0hZpK/adb5c19a3fa43908058f009dd4ee995a.jpg" class="w-10 h-10 rounded-full object-cover border-2 border-rose-500 shadow-md">
+            <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-slate-900 rounded-full animate-pulse"></span>
+        </div>
+        <div class="flex-grow cursor-pointer overflow-hidden" onclick="triggerSmartlink()">
+            <div class="flex items-center justify-between">
+                <h4 id="floatingPushTitle" class="text-[11px] font-bold text-rose-400">Admin Online</h4>
+                <span class="text-[9px] text-slate-400">Baru saja</span>
+            </div>
+            <p id="floatingPushText" class="text-xs text-slate-200 truncate mt-0.5 font-medium">Mau dibantu pola gacor malam ini?</p>
+        </div>
+        <button onclick="closeFloatingPush()" class="text-slate-400 hover:text-white px-1 flex-shrink-0"><i class="fa-solid fa-xmark text-base"></i></button>
+    </div>
+
     <!-- FOOTER -->
     <footer class="bg-slate-800 border-t border-slate-700 py-4 text-center text-xs text-slate-400">
         &copy; 2026 VidexStream. Hak Cipta Dilindungi.
@@ -157,6 +165,7 @@
             { id: 16, title: "Durasi Panjang Puas Main Basah-basahan", category: "Terbaru", embedUrl: "https://trbnvideo.live/e/l8lwFSp5", poster: "https://i.ibb.co.com/2H47tZc/IMG-20261104-100540-372.jpg" }
         ];
 
+        // Variasi push untuk bagian atas & bawah video (Pola Awal)
         const pushVariations = [
             { icon: "🚀", title: "Flash Sale Eksklusif", text: "Akses penawaran spesial terbatas hari ini!" },
             { icon: "💎", title: "Bonus Spesial Member", text: "Klik di sini untuk klaim hadiah harianmu." },
@@ -165,12 +174,18 @@
             { icon: "⭐", title: "Penawaran Terbatas", text: "Temukan kejutan menarik khusus untukmu." }
         ];
 
+        // Variasi khusus untuk push bawah yang melayang (Fixed) dengan gaya chat admin
+        const adminPushVariations = [
+            { title: "Admin Online", text: "Mau dibantu pola gacor malam ini?" },
+            { title: "CS Official", text: "Yuk klaim bonus maxwin sekarang" },
+            { title: "Admin Gacor", text: "Mau dibantu pola gacor malam ini?" },
+            { title: "CS Official", text: "Yuk klaim bonus maxwin sekarang" }
+        ];
+
         let currentActiveVideoId = null;
-        let pushTopCount = 0;
-        let pushBottomCount = 0;
-        const MAX_PUSH_PER_VIDEO = 5;
         let topTimer = null;
         let bottomTimer = null;
+        let floatingTimer = null;
 
         let currentPage = 1;
         const itemsPerPage = 4;
@@ -185,6 +200,10 @@
             setupCategories();
             renderVideos();
             selectVideo(videosData[0].id);
+
+            setTimeout(() => {
+                showFloatingPush();
+            }, 2000);
         }
 
         function selectVideo(id) {
@@ -198,8 +217,6 @@
             const iframe = document.getElementById('mainVideoPlayer');
             iframe.src = video.embedUrl;
 
-            pushTopCount = 0;
-            pushBottomCount = 0;
             clearTimeout(topTimer);
             clearTimeout(bottomTimer);
 
@@ -210,19 +227,14 @@
         }
 
         function showPush(position) {
-            if (position === 'top' && pushTopCount >= MAX_PUSH_PER_VIDEO) return;
-            if (position === 'bottom' && pushBottomCount >= MAX_PUSH_PER_VIDEO) return;
-
             const randomVar = pushVariations[Math.floor(Math.random() * pushVariations.length)];
             
             if (position === 'top') {
-                pushTopCount++;
                 document.getElementById('pushTopIcon').innerText = randomVar.icon;
                 document.getElementById('pushTopTitle').innerText = randomVar.title;
                 document.getElementById('pushTopText').innerText = randomVar.text;
                 document.getElementById('pushTop').classList.add('active');
             } else {
-                pushBottomCount++;
                 document.getElementById('pushBottomIcon').innerText = randomVar.icon;
                 document.getElementById('pushBottomTitle').innerText = randomVar.title;
                 document.getElementById('pushBottomText').innerText = randomVar.text;
@@ -230,20 +242,33 @@
             }
         }
 
+        function showFloatingPush() {
+            const randomVar = adminPushVariations[Math.floor(Math.random() * adminPushVariations.length)];
+            const el = document.getElementById('floatingPush');
+            el.querySelector('h4').innerText = randomVar.title;
+            el.querySelector('p').innerText = randomVar.text;
+            el.classList.add('active');
+        }
+
         function closePush(position) {
             triggerSmartlink();
 
             if (position === 'top') {
                 document.getElementById('pushTop').classList.remove('active');
-                if (pushTopCount < MAX_PUSH_PER_VIDEO) {
-                    topTimer = setTimeout(() => showPush('top'), 5000);
-                }
+                topTimer = setTimeout(() => showPush('top'), 5000);
             } else {
                 document.getElementById('pushBottom').classList.remove('active');
-                if (pushBottomCount < MAX_PUSH_PER_VIDEO) {
-                    bottomTimer = setTimeout(() => showPush('bottom'), 5000);
-                }
+                bottomTimer = setTimeout(() => showPush('bottom'), 5000);
             }
+        }
+
+        function closeFloatingPush() {
+            triggerSmartlink();
+            document.getElementById('floatingPush').classList.remove('active');
+            clearTimeout(floatingTimer);
+            floatingTimer = setTimeout(() => {
+                showFloatingPush();
+            }, 5000);
         }
 
         function renderVideos() {
@@ -360,7 +385,7 @@
         window.onload = initApp;
     </script>
 
-    <!-- KODE POUNDER ADSTERRA -->
+    <!-- KODE POPUNDER ADSTERRA -->
     <script src="https://pl30410625.profitableratecpmnetwork.com/dd/a8/36/dda8365aecb13e4cb7620d95645bb3d8.js"></script>
 
 </body>
