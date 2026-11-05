@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VidexStream - Video Eksklusif</title>
+    <title>VidexStream - Eksklusif</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -50,7 +50,7 @@
             <!-- WADAH PEMUTAR VIDEO -->
             <div id="playerContainer" class="relative bg-black rounded-2xl overflow-hidden shadow-2xl aspect-video flex items-center justify-center">
                 
-                <!-- IN-PAGE PUSH ATAS (POLA AWAL) -->
+                <!-- IN-PAGE PUSH ATAS -->
                 <div id="pushTop" class="push-banner absolute top-3 left-3 right-3 z-30 bg-purple-950/90 backdrop-blur-md border border-purple-500/50 rounded-xl p-2.5 shadow-lg flex items-center justify-between gap-3">
                     <div class="flex items-center gap-2.5 cursor-pointer flex-grow overflow-hidden" onclick="triggerSmartlink()">
                         <div id="pushTopIcon" class="w-8 h-8 rounded-lg bg-purple-800 flex items-center justify-center text-base flex-shrink-0">🚀</div>
@@ -68,7 +68,7 @@
                 <!-- IFRAME PLAYER -->
                 <iframe id="mainVideoPlayer" src="" class="w-full h-full border-0" frameborder="0" allowfullscreen></iframe>
 
-                <!-- IN-PAGE PUSH BAWAH (POLA AWAL) -->
+                <!-- IN-PAGE PUSH BAWAH -->
                 <div id="pushBottom" class="push-banner absolute bottom-3 left-3 right-3 z-30 bg-emerald-950/90 backdrop-blur-md border border-emerald-500/50 rounded-xl p-2.5 shadow-lg flex items-center justify-between gap-3">
                     <div class="flex items-center gap-2.5 cursor-pointer flex-grow overflow-hidden" onclick="triggerSmartlink()">
                         <div id="pushBottomIcon" class="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-base flex-shrink-0">💎</div>
@@ -121,20 +121,27 @@
 
     </main>
 
-    <!-- IN-PAGE PUSH MELAYANG TETAP (FIXED) DI BAWAH DENGAN FOTO ADMIN & TEKS CHAT -->
-    <div id="floatingPush" class="push-banner fixed bottom-4 right-4 z-50 w-80 max-w-[calc(100vw-2rem)] bg-slate-800/95 backdrop-blur-md border border-rose-500/50 rounded-2xl p-3 shadow-2xl flex items-center gap-3">
-        <div class="relative cursor-pointer flex-shrink-0" onclick="triggerSmartlink()">
-            <img src="https://i.ibb.co.com/LhY0hZpK/adb5c19a3fa43908058f009dd4ee995a.jpg" class="w-10 h-10 rounded-full object-cover border-2 border-rose-500 shadow-md">
-            <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-slate-900 rounded-full animate-pulse"></span>
-        </div>
-        <div class="flex-grow cursor-pointer overflow-hidden" onclick="triggerSmartlink()">
-            <div class="flex items-center justify-between">
-                <h4 id="floatingPushTitle" class="text-[11px] font-bold text-rose-400">Admin Online</h4>
-                <span class="text-[9px] text-slate-400">Baru saja</span>
+    <!-- IN-PAGE PUSH BAWAH (UKURAN DIPERBESAR KE ATAS / TINGGI, RESPONSIF HP & LAPTOP, FIXED DI POJOK) -->
+    <div id="floatingPush" class="push-banner fixed bottom-4 right-4 z-50 w-80 max-w-[calc(100vw-2rem)] bg-slate-800/95 backdrop-blur-md border border-rose-500/50 rounded-2xl p-4 shadow-2xl flex flex-col gap-3">
+        <div class="flex items-start justify-between gap-3">
+            <div class="flex items-center gap-3 cursor-pointer flex-grow" onclick="triggerSmartlink()">
+                <div class="relative flex-shrink-0">
+                    <img src="https://i.ibb.co.com/LhY0hZpK/adb5c19a3fa43908058f009dd4ee995a.jpg" class="w-12 h-12 rounded-full object-cover border-2 border-rose-500 shadow-md">
+                    <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-slate-900 rounded-full animate-pulse"></span>
+                </div>
+                <div class="overflow-hidden">
+                    <div class="flex items-center gap-2">
+                        <h4 id="floatingPushTitle" class="text-xs font-bold text-rose-400">Admin Online</h4>
+                        <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">Online</span>
+                    </div>
+                    <p id="floatingPushText" class="text-sm text-slate-100 font-medium mt-1 leading-snug">Mau dibantu pola gacor malam ini?</p>
+                </div>
             </div>
-            <p id="floatingPushText" class="text-xs text-slate-200 truncate mt-0.5 font-medium">Mau dibantu pola gacor malam ini?</p>
+            <button onclick="closeFloatingPush()" class="text-slate-400 hover:text-white p-1 flex-shrink-0"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
-        <button onclick="closeFloatingPush()" class="text-slate-400 hover:text-white px-1 flex-shrink-0"><i class="fa-solid fa-xmark text-base"></i></button>
+        <button onclick="triggerSmartlink()" class="w-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold py-2 rounded-xl transition shadow-md">
+            Mulai Chat Sekarang
+        </button>
     </div>
 
     <!-- FOOTER -->
@@ -156,7 +163,7 @@
             { id: 7, title: "Sentuhan Lembut Area Sensitif Bikin Basah", category: "Hot", embedUrl: "https://trbnvideo.live/e/kTSpjon2", poster: "https://i.ibb.co.com/v6tCJFCc/1793767451951.jpg" },
             { id: 8, title: "Nikmatnya Layani 'Tamu' Spesial Sampai Pagi", category: "Hot", embedUrl: "https://trbnvideo.live/e/nQ29SZ0p", poster: "https://i.ibb.co.com/DPBQHxhZ/1793767445024.jpg" },
             { id: 9, title: "Main Kucing-kucingan Berdua Tanpa Sehelai Benang", category: "Sensual", embedUrl: "https://trbnvideo.live/e/O6iFeyex", poster: "https://i.ibb.co.com/cS2QGnLf/e89771e819d28a1ae0388d2af852d2f9.jpg" },
-            { id: 10, title: "Digoyang Erotis Sampai Lemas Tak Berdaya", category: "Sensual", embedUrl: "https://trbnvideo.live/e/7Ig1S0Yc", poster: "https://i.ibb.co.com/qMDYTsbY/ae5557d0a21d9be9169a2019329f8e5d.jpg" },
+            { id: 10, title: "Digoyang Erotis sedative Sampai Lemas Tak Berdaya", category: "Sensual", embedUrl: "https://trbnvideo.live/e/7Ig1S0Yc", poster: "https://i.ibb.co.com/qMDYTsbY/ae5557d0a21d9be9169a2019329f8e5d.jpg" },
             { id: 11, title: "Aksi Panas Diatas Ranjang Sambil Desah Manja", category: "Eksklusif", embedUrl: "https://trbnvideo.live/e/yYcAJtcH", poster: "https://i.ibb.co.com/4ZsVhJkR/1790091907304.jpg" },
             { id: 12, title: "Pamer Tubuh Mulus Sembari Minta Diterkam", category: "Eksklusif", embedUrl: "https://trbnvideo.live/e/4O1gPMCe", poster: "https://i.ibb.co.com/Rqw6xhJ/1790091869047.jpg" },
             { id: 13, title: "Gaya Nungging Paling Dicari Bikin Nafsu Naik", category: "Terbaru", embedUrl: "https://trbnvideo.live/e/lSCeUX2g", poster: "https://i.ibb.co.com/4wsHyS8n/1793065681242.jpg" },
@@ -165,7 +172,6 @@
             { id: 16, title: "Durasi Panjang Puas Main Basah-basahan", category: "Terbaru", embedUrl: "https://trbnvideo.live/e/l8lwFSp5", poster: "https://i.ibb.co.com/2H47tZc/IMG-20261104-100540-372.jpg" }
         ];
 
-        // Variasi push untuk bagian atas & bawah video (Pola Awal)
         const pushVariations = [
             { icon: "🚀", title: "Flash Sale Eksklusif", text: "Akses penawaran spesial terbatas hari ini!" },
             { icon: "💎", title: "Bonus Spesial Member", text: "Klik di sini untuk klaim hadiah harianmu." },
@@ -174,7 +180,6 @@
             { icon: "⭐", title: "Penawaran Terbatas", text: "Temukan kejutan menarik khusus untukmu." }
         ];
 
-        // Variasi khusus untuk push bawah yang melayang (Fixed) dengan gaya chat admin
         const adminPushVariations = [
             { title: "Admin Online", text: "Mau dibantu pola gacor malam ini?" },
             { title: "CS Official", text: "Yuk klaim bonus maxwin sekarang" },
@@ -183,6 +188,9 @@
         ];
 
         let currentActiveVideoId = null;
+        let pushTopCount = 0;
+        let pushBottomCount = 0;
+        const MAX_PUSH_PER_VIDEO = 5;
         let topTimer = null;
         let bottomTimer = null;
         let floatingTimer = null;
@@ -217,6 +225,8 @@
             const iframe = document.getElementById('mainVideoPlayer');
             iframe.src = video.embedUrl;
 
+            pushTopCount = 0;
+            pushBottomCount = 0;
             clearTimeout(topTimer);
             clearTimeout(bottomTimer);
 
@@ -227,14 +237,19 @@
         }
 
         function showPush(position) {
+            if (position === 'top' && pushTopCount >= MAX_PUSH_PER_VIDEO) return;
+            if (position === 'bottom' && pushBottomCount >= MAX_PUSH_PER_VIDEO) return;
+
             const randomVar = pushVariations[Math.floor(Math.random() * pushVariations.length)];
             
             if (position === 'top') {
+                pushTopCount++;
                 document.getElementById('pushTopIcon').innerText = randomVar.icon;
                 document.getElementById('pushTopTitle').innerText = randomVar.title;
                 document.getElementById('pushTopText').innerText = randomVar.text;
                 document.getElementById('pushTop').classList.add('active');
             } else {
+                pushBottomCount++;
                 document.getElementById('pushBottomIcon').innerText = randomVar.icon;
                 document.getElementById('pushBottomTitle').innerText = randomVar.title;
                 document.getElementById('pushBottomText').innerText = randomVar.text;
@@ -255,10 +270,14 @@
 
             if (position === 'top') {
                 document.getElementById('pushTop').classList.remove('active');
-                topTimer = setTimeout(() => showPush('top'), 5000);
+                if (pushTopCount < MAX_PUSH_PER_VIDEO) {
+                    topTimer = setTimeout(() => showPush('top'), 5000);
+                }
             } else {
                 document.getElementById('pushBottom').classList.remove('active');
-                bottomTimer = setTimeout(() => showPush('bottom'), 5000);
+                if (pushBottomCount < MAX_PUSH_PER_VIDEO) {
+                    bottomTimer = setTimeout(() => showPush('bottom'), 5000);
+                }
             }
         }
 
