@@ -2,204 +2,366 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Eksklusif Media Streaming</title>
-    
-    <!-- Meta Open Graph -->
-    <meta property="og:title" content="Portal Berita & Hiburan Terkini">
-    <meta property="og:description" content="Tonton tayangan video lengkap kualitas HD di sini.">
-    <meta property="og:image" content="https://i.ibb.co.com/1JMcw1ZF/1790925202555.png">
-    <meta property="og:type" content="website">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDEX STREAM</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body {
-            width: 100%; height: 100%; background-color: #000;
-            font-family: 'Poppins', sans-serif; overflow: hidden; color: #fff;
+        .push-banner {
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
         }
-
-        /* 1. TIRAI GATE */
-        #prePlayerGate {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.9)), url('https://i.ibb.co.com/1JMcw1ZF/1790925202555.png') center/cover no-repeat;
-            z-index: 2000; display: flex; justify-content: center; align-items: center;
+        #pushTop.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
         }
-        .gate-btn {
-            background: #ef4444; color: #fff; border: none; padding: 18px 40px;
-            font-size: 1.5rem; font-weight: 700; border-radius: 50px; cursor: pointer;
-            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.6); animation: pulse 1.5s infinite;
-            text-transform: uppercase; letter-spacing: 2px;
+        #pushBottom {
+            transform: translateY(10px);
         }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-            100% { transform: scale(1); }
-        }
-
-        /* 2. KONTEN VIDEO & TOMBOL PLAY SEGITIGA */
-        .video-container {
-            position: relative; width: 100%; height: 100vh;
-            display: flex; justify-content: center; align-items: center; background: #000;
-        }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        
-        #playTrigger {
-            position: absolute; z-index: 5; background: rgba(239, 68, 68, 0.9);
-            border: none; width: 90px; height: 90px; border-radius: 50%;
-            display: none; justify-content: center; align-items: center;
-            cursor: pointer; box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
-        }
-        #playTrigger svg { width: 45px; height: 45px; fill: white; margin-left: 6px; }
-
-        /* 3. MODAL POPUP */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px);
-            z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px;
-        }
-        .modal-card {
-            background: #1e293b; width: 100%; max-width: 450px; padding: 40px 30px;
-            border-radius: 24px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-        .modal-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 15px; color: #f8fafc; }
-        .modal-desc { font-size: 1.1rem; color: #cbd5e1; margin-bottom: 30px; line-height: 1.6; }
-        .modal-btn {
-            display: block; width: 100%; padding: 18px; background: #3b82f6; color: white;
-            border-radius: 16px; font-weight: 700; font-size: 1.2rem; border: none; cursor: pointer;
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.5); text-transform: uppercase;
+        #pushBottom.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
 
-    <!-- STAGE 1: Gate Overlay -->
-    <div id="prePlayerGate">
-        <button class="gate-btn" id="gateBtn">PLAY VIDEO</button>
-    </div>
+    <!-- HEADER / NAVIGASI -->
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="location.reload()">
+                <i class="fa-solid fa-play-circle text-rose-500 text-2xl"></i>
+                <span class="font-bold text-lg tracking-wide">VidexStream</span>
+            </div>
+            <!-- Pencarian -->
+            <div class="w-full md:w-96 relative">
+                <input type="text" id="searchInput" placeholder="Cari video..." 
+                    class="w-full bg-slate-900 border border-slate-700 rounded-full px-4 py-2 pl-10 text-sm focus:outline-none focus:border-rose-500">
+                <i class="fa-solid fa-search absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+            </div>
+        </div>
+    </header>
 
-    <!-- STAGE 2: Pemutar Video & Tombol Segitiga -->
-    <div class="video-container">
-        <video id="secureVideo" poster="https://i.ibb.co.com/1JMcw1ZF/1790925202555.png" playsinline webkit-playsinline>
-            Browser Anda tidak mendukung pemutar video.
-        </video>
+    <!-- KONTEN UTAMA -->
+    <main class="max-w-6xl mx-auto px-4 py-6 w-full flex-grow">
         
-        <button id="playTrigger" aria-label="Play Video">
-            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </button>
-    </div>
+        <!-- BAGIAN PEMUTAR VIDEO & PUSH DI DALAM LAYAR -->
+        <section class="mb-10">
+            <h2 id="currentVideoTitle" class="text-xl md:text-2xl font-bold mb-3">Memuat Video...</h2>
+            
+            <!-- WADAH PEMUTAR VIDEO -->
+            <div id="playerContainer" class="relative bg-black rounded-2xl overflow-hidden shadow-2xl aspect-video flex items-center justify-center">
+                
+                <!-- IN-PAGE PUSH ATAS -->
+                <div id="pushTop" class="push-banner absolute top-3 left-3 right-3 z-30 bg-purple-950/90 backdrop-blur-md border border-purple-500/50 rounded-xl p-2.5 shadow-lg flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5 cursor-pointer flex-grow overflow-hidden" onclick="triggerSmartlink()">
+                        <div id="pushTopIcon" class="w-8 h-8 rounded-lg bg-purple-800 flex items-center justify-center text-base flex-shrink-0">🚀</div>
+                        <div class="truncate">
+                            <h4 id="pushTopTitle" class="text-[11px] font-semibold text-purple-200 truncate">Penawaran Spesial</h4>
+                            <p id="pushTopText" class="text-xs font-bold text-white truncate">Dapatkan bonus eksklusif sekarang juga!</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <button onclick="triggerSmartlink()" class="bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg transition">Klaim</button>
+                        <button onclick="closePush('top')" class="text-slate-400 hover:text-white px-1"><i class="fa-solid fa-xmark text-base"></i></button>
+                    </div>
+                </div>
 
-    <!-- STAGE 3: Popup Verifikasi Umur -->
-    <div id="ageModal" class="modal-overlay">
-        <div class="modal-card">
-            <h3 class="modal-title" style="color: #ef4444;">Peringatan 18+</h3>
-            <p class="modal-desc">Konten ini khusus untuk orang dewasa. Harap verifikasi usia Anda terlebih dahulu.</p>
-            <button id="ageConfirmBtn" class="modal-btn" style="background: #ef4444; box-shadow: 0 8px 20px rgba(239,68,68,0.5);">SAYA BERUSIA 18+</button>
-        </div>
-    </div>
+                <!-- IFRAME PLAYER -->
+                <iframe id="mainVideoPlayer" src="" class="w-full h-full border-0" frameborder="0" allowfullscreen></iframe>
 
-    <!-- STAGE 4: Popup Verifikasi Human -->
-    <div id="humanModal" class="modal-overlay">
-        <div class="modal-card">
-            <h3 class="modal-title" style="color: #3b82f6;">Verifikasi Keamanan</h3>
-            <p class="modal-desc">Sistem mendeteksi akses. Buktikan bahwa Anda adalah manusia untuk melanjutkan.</p>
-            <button id="humanConfirmBtn" class="modal-btn">VERIFIKASI SEKARANG</button>
-        </div>
-    </div>
+                <!-- IN-PAGE PUSH BAWAH -->
+                <div id="pushBottom" class="push-banner absolute bottom-3 left-3 right-3 z-30 bg-emerald-950/90 backdrop-blur-md border border-emerald-500/50 rounded-xl p-2.5 shadow-lg flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5 cursor-pointer flex-grow overflow-hidden" onclick="triggerSmartlink()">
+                        <div id="pushBottomIcon" class="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-base flex-shrink-0">💎</div>
+                        <div class="truncate">
+                            <h4 id="pushBottomTitle" class="text-[11px] font-semibold text-emerald-200 truncate">Rekomendasi Terbaik</h4>
+                            <p id="pushBottomText" class="text-xs font-bold text-white truncate">Gabung sekarang dan nikmati keuntungannya!</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <button onclick="triggerSmartlink()" class="bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg transition">Buka</button>
+                        <button onclick="closePush('bottom')" class="text-slate-400 hover:text-white px-1"><i class="fa-solid fa-xmark text-base"></i></button>
+                    </div>
+                </div>
 
-    <!-- STAGE 5: Popup Sukses -->
-    <div id="successModal" class="modal-overlay">
-        <div class="modal-card">
-            <h3 class="modal-title" style="color: #22c55e;">BERHASIL!</h3>
-            <p class="modal-desc" style="font-size: 1.2rem; font-weight: 600;">TERIMAKASIH TELAH MELEWATI IKLAN, SEKARANG ANDA BISA MENIKMATI VIDEONYA.</p>
-            <button id="startWatchingBtn" class="modal-btn" style="background: #22c55e; box-shadow: 0 8px 20px rgba(34,197,94,0.5);">LANJUT</button>
-        </div>
-    </div>
+            </div>
 
+            <!-- KONTROL VIDEO -->
+            <div class="flex items-center justify-between mt-3 bg-slate-800 p-3 rounded-xl border border-slate-700">
+                <span id="currentVideoCategory" class="text-xs bg-rose-500/20 text-rose-400 px-3 py-1 rounded-full font-medium">Kategori</span>
+                <div class="flex items-center gap-3">
+                    <button onclick="shareVideo()" class="text-sm bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg flex items-center gap-2 transition">
+                        <i class="fa-solid fa-share-nodes"></i> Bagikan
+                    </button>
+                    <button onclick="toggleFullscreen()" class="text-sm bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg flex items-center gap-2 transition">
+                        <i class="fa-solid fa-expand"></i> Layar Penuh
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- KATEGORI & DAFTAR VIDEO -->
+        <section>
+            <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                <h3 class="text-lg font-bold">Daftar Video</h3>
+                <div id="categoryFilters" class="flex gap-2 overflow-x-auto pb-1 max-w-full">
+                    <button onclick="filterCategory('Semua')" class="cat-btn bg-rose-600 text-white text-xs px-3 py-1.5 rounded-full font-medium transition">Semua</button>
+                </div>
+            </div>
+
+            <!-- Grid Video -->
+            <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"></div>
+
+            <!-- Pagination -->
+            <div class="flex justify-center items-center gap-3 mt-8">
+                <button id="prevPage" onclick="changePage(-1)" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed">Sebelumnya</button>
+                <span id="pageInfo" class="text-sm text-slate-400">Hal 1 dari 4</span>
+                <button id="nextPage" onclick="changePage(1)" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed">Selanjutnya</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-800 border-t border-slate-700 py-4 text-center text-xs text-slate-400">
+        &copy; 2026 VidexStream. Hak Cipta Dilindungi.
+    </footer>
+
+    <!-- SKRIP UTAMA -->
     <script>
-        // Link Adsterra Smartlink Anda
-        const smartlinkURL = "https://www.profitableratecpmnetwork.com/hh55phupz7?key=035891703dff41ba6e0911050a5989af";
+        const SMARTLINK_URL = "https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2";
 
-        // Fungsi penyuntik Script Iklan / Smartlink
-        function openSmartlink() {
-            window.open(smartlinkURL, '_blank');
+        const videosData = [
+            { id: 1, title: "Goyangan Hot Menggoda Bikin Lemes di Kamar", category: "Hot", embedUrl: "https://trbnvideo.live/e/jqUE2s1j", poster: "https://i.ibb.co.com/3mr8M7v7/1793767600887.jpg" },
+            { id: 2, title: "Desahan Manja Pacar Cantik Pas Berduaan", category: "Hot", embedUrl: "https://trbnvideo.live/e/rkB2lJU0", poster: "https://i.ibb.co.com/9mBnCGtS/1793767589103.jpg" },
+            { id: 3, title: "Aksi Nakal Malam Jumat Bikin Ketagihan", category: "Sensual", embedUrl: "https://trbnvideo.live/e/rF4FRrTZ", poster: "https://i.ibb.co.com/M52PQp5p/1793767574587.jpg" },
+            { id: 4, title: "Minta Jatah Duluan Gegara Suami Pulang Malam", category: "Sensual", embedUrl: "https://trbnvideo.live/e/CJqvagsK", poster: "https://i.ibb.co.com/0VXctt0x/1793767508529.jpg" },
+            { id: 5, title: "Buka-bukanan di Kosan Sambil Main Licin", category: "Eksklusif", embedUrl: "https://trbnvideo.live/e/10VFNLlE", poster: "https://i.ibb.co.com/v4gL0StF/1793767490790.jpg" },
+            { id: 6, title: "Gadis Montok Ngajak 'Main' Tanpa Busana", category: "Eksklusif", embedUrl: "https://trbnvideo.live/e/2buj45jB", poster: "https://i.ibb.co.com/xKxy1wqZ/1793767469519.jpg" },
+            { id: 7, title: "Sentuhan Lembut Area Sensitif Bikin Basah", category: "Hot", embedUrl: "https://trbnvideo.live/e/kTSpjon2", poster: "https://i.ibb.co.com/v6tCJFCc/1793767451951.jpg" },
+            { id: 8, title: "Nikmatnya Layani 'Tamu' Spesial Sampai Pagi", category: "Hot", embedUrl: "https://trbnvideo.live/e/nQ29SZ0p", poster: "https://i.ibb.co.com/DPBQHxhZ/1793767445024.jpg" },
+            { id: 9, title: "Main Kucing-kucingan Berdua Tanpa Sehelai Benang", category: "Sensual", embedUrl: "https://trbnvideo.live/e/O6iFeyex", poster: "https://i.ibb.co.com/cS2QGnLf/e89771e819d28a1ae0388d2af852d2f9.jpg" },
+            { id: 10, title: "Digoyang Erotis Sampai Lemas Tak Berdaya", category: "Sensual", embedUrl: "https://trbnvideo.live/e/7Ig1S0Yc", poster: "https://i.ibb.co.com/qMDYTsbY/ae5557d0a21d9be9169a2019329f8e5d.jpg" },
+            { id: 11, title: "Aksi Panas Diatas Ranjang Sambil Desah Manja", category: "Eksklusif", embedUrl: "https://trbnvideo.live/e/yYcAJtcH", poster: "https://i.ibb.co.com/4ZsVhJkR/1790091907304.jpg" },
+            { id: 12, title: "Pamer Tubuh Mulus Sembari Minta Diterkam", category: "Eksklusif", embedUrl: "https://trbnvideo.live/e/4O1gPMCe", poster: "https://i.ibb.co.com/Rqw6xhJ/1790091869047.jpg" },
+            { id: 13, title: "Gaya Nungging Paling Dicari Bikin Nafsu Naik", category: "Terbaru", embedUrl: "https://trbnvideo.live/e/lSCeUX2g", poster: "https://i.ibb.co.com/4wsHyS8n/1793065681242.jpg" },
+            { id: 14, title: "Pelukan Erat Sambil Saling Cumbu di Dalam Kamar", category: "Terbaru", embedUrl: "https://trbnvideo.live/e/q2Zg5y2K", poster: "https://i.ibb.co.com/7dfrRv4k/1793129144788.jpg" },
+            { id: 15, title: "Sentuhan Nakal Bikin Merinding Sekujur Tubuh", category: "Terbaru", embedUrl: "https://trbnvideo.live/e/10VFNLlE", poster: "https://i.ibb.co.com/Z6qpYMWZ/IMG-20261104-100544-611.jpg" },
+            { id: 16, title: "Durasi Panjang Puas Main Basah-basahan", category: "Terbaru", embedUrl: "https://trbnvideo.live/e/l8lwFSp5", poster: "https://i.ibb.co.com/2H47tZc/IMG-20261104-100540-372.jpg" }
+        ];
+
+        const pushVariations = [
+            { icon: "🚀", title: "Flash Sale Eksklusif", text: "Akses penawaran spesial terbatas hari ini!" },
+            { icon: "💎", title: "Bonus Spesial Member", text: "Klik di sini untuk klaim hadiah harianmu." },
+            { icon: "🔥", title: "Trending Hari Ini", text: "Jangan lewatkan kesempatan emas ini, cek sekarang!" },
+            { icon: "🎁", title: "Kekejutan Hadiah", text: "Kamu terpilih mendapatkan akses VIP gratis!" },
+            { icon: "⭐", title: "Penawaran Terbatas", text: "Temukan kejutan menarik khusus untukmu." }
+        ];
+
+        let currentActiveVideoId = null;
+        let pushTopCount = 0;
+        let pushBottomCount = 0;
+        const MAX_PUSH_PER_VIDEO = 5;
+        let topTimer = null;
+        let bottomTimer = null;
+
+        let currentPage = 1;
+        const itemsPerPage = 4;
+        let currentCategory = "Semua";
+        let searchQuery = "";
+
+        function triggerSmartlink() {
+            window.open(SMARTLINK_URL, '_blank');
         }
 
-        // ELEMEN DOM
-        const videoElement = document.getElementById('secureVideo');
-        const gateBtn = document.getElementById('gateBtn');
-        const gateOverlay = document.getElementById('prePlayerGate');
-        const playTrigger = document.getElementById('playTrigger');
-        
-        const ageModal = document.getElementById('ageModal');
-        const humanModal = document.getElementById('humanModal');
-        const successModal = document.getElementById('successModal');
-        
-        let hasPassedAge = false;
-        let hasPassedHuman = false;
+        function initApp() {
+            setupCategories();
+            renderVideos();
+            selectVideo(videosData[0].id);
+        }
 
-        // Muat Link Video Anda
-        window.addEventListener('DOMContentLoaded', () => {
-            videoElement.src = "https://cdn.videy.co/r6JCvQxd1.mp4";
-            videoElement.load();
-        });
+        function selectVideo(id) {
+            const video = videosData.find(v => v.id === id);
+            if (!video) return;
 
-        // TAHAP 1: Klik "PLAY VIDEO" -> Membuka Smartlink & Menampilkan Tombol Play Segitiga
-        gateBtn.addEventListener('click', () => {
-            openSmartlink();
-            gateOverlay.style.display = 'none';
-            playTrigger.style.display = 'flex';
-        });
-
-        // TAHAP 2: Klik Tombol Segitiga -> Mulai Putar Video
-        playTrigger.addEventListener('click', () => {
-            playTrigger.style.display = 'none';
-            videoElement.controls = true;
-            videoElement.play();
-        });
-
-        // TAHAP 3 & 4: Pemantauan Waktu Video (Detik ke-3 & Detik ke-6)
-        videoElement.addEventListener('timeupdate', () => {
-            // Detik 3: Popup Umur
-            if (videoElement.currentTime >= 3 && !hasPassedAge) {
-                videoElement.pause();
-                videoElement.controls = false;
-                ageModal.style.display = 'flex';
-                hasPassedAge = true;
-            }
+            currentActiveVideoId = id;
+            document.getElementById('currentVideoTitle').innerText = video.title;
+            document.getElementById('currentVideoCategory').innerText = video.category;
             
-            // Detik 6: Popup Human
-            if (videoElement.currentTime >= 6 && hasPassedAge && !hasPassedHuman) {
-                videoElement.pause();
-                videoElement.controls = false;
-                humanModal.style.display = 'flex';
-                hasPassedHuman = true;
+            const iframe = document.getElementById('mainVideoPlayer');
+            iframe.src = video.embedUrl;
+
+            pushTopCount = 0;
+            pushBottomCount = 0;
+            clearTimeout(topTimer);
+            clearTimeout(bottomTimer);
+
+            setTimeout(() => {
+                showPush('top');
+                showPush('bottom');
+            }, 2000);
+        }
+
+        function showPush(position) {
+            if (position === 'top' && pushTopCount >= MAX_PUSH_PER_VIDEO) return;
+            if (position === 'bottom' && pushBottomCount >= MAX_PUSH_PER_VIDEO) return;
+
+            const randomVar = pushVariations[Math.floor(Math.random() * pushVariations.length)];
+            
+            if (position === 'top') {
+                pushTopCount++;
+                document.getElementById('pushTopIcon').innerText = randomVar.icon;
+                document.getElementById('pushTopTitle').innerText = randomVar.title;
+                document.getElementById('pushTopText').innerText = randomVar.text;
+                document.getElementById('pushTop').classList.add('active');
+            } else {
+                pushBottomCount++;
+                document.getElementById('pushBottomIcon').innerText = randomVar.icon;
+                document.getElementById('pushBottomTitle').innerText = randomVar.title;
+                document.getElementById('pushBottomText').innerText = randomVar.text;
+                document.getElementById('pushBottom').classList.add('active');
             }
+        }
+
+        function closePush(position) {
+            triggerSmartlink();
+
+            if (position === 'top') {
+                document.getElementById('pushTop').classList.remove('active');
+                if (pushTopCount < MAX_PUSH_PER_VIDEO) {
+                    topTimer = setTimeout(() => showPush('top'), 5000);
+                }
+            } else {
+                document.getElementById('pushBottom').classList.remove('active');
+                if (pushBottomCount < MAX_PUSH_PER_VIDEO) {
+                    bottomTimer = setTimeout(() => showPush('bottom'), 5000);
+                }
+            }
+        }
+
+        function renderVideos() {
+            const grid = document.getElementById('videoGrid');
+            grid.innerHTML = '';
+
+            let filtered = videosData.filter(v => {
+                const matchCat = currentCategory === "Semua" || v.category === currentCategory;
+                const matchSearch = v.title.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchCat && matchSearch;
+            });
+
+            const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const paginatedItems = filtered.slice(start, start + itemsPerPage);
+
+            if (paginatedItems.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-8 text-slate-400">Tidak ada video ditemukan.</div>`;
+            } else {
+                paginatedItems.forEach(video => {
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-rose-500 transition cursor-pointer flex flex-col justify-between shadow-md";
+                    
+                    card.onclick = () => {
+                        selectVideo(video.id);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    };
+
+                    card.innerHTML = `
+                        <div class="relative w-full h-32 bg-black overflow-hidden flex items-center justify-center">
+                            <img src="${video.poster}" alt="${video.title}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center play-btn-wrapper" onclick="event.stopPropagation(); handleThumbnailPlay(${video.id})">
+                                <div class="w-10 h-10 rounded-full bg-rose-600/90 flex items-center justify-center shadow-lg transform transition hover:scale-110">
+                                    <i class="fa-solid fa-play text-white text-sm ml-0.5"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-2.5">
+                            <span class="text-[9px] bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded font-medium">${video.category}</span>
+                            <h4 class="text-xs font-bold mt-1.5 line-clamp-2 leading-snug">${video.title}</h4>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            document.getElementById('pageInfo').innerText = `Hal ${currentPage} dari ${totalPages}`;
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage >= totalPages;
+        }
+
+        function handleThumbnailPlay(id) {
+            triggerSmartlink();
+            selectVideo(id);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function setupCategories() {
+            const categories = ["Semua", ...new Set(videosData.map(v => v.category))];
+            const container = document.getElementById('categoryFilters');
+            container.innerHTML = '';
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `cat-btn text-xs px-3 py-1.5 rounded-full font-medium transition ${cat === currentCategory ? 'bg-rose-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`;
+                btn.innerText = cat;
+                btn.onclick = () => {
+                    currentCategory = cat;
+                    currentPage = 1;
+                    renderVideos();
+                    document.querySelectorAll('.cat-btn').forEach(b => b.classList.replace('bg-rose-600', 'bg-slate-800'));
+                    btn.classList.replace('bg-slate-800', 'bg-rose-600');
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function changePage(direction) {
+            currentPage += direction;
+            renderVideos();
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            currentPage = 1;
+            renderVideos();
         });
 
-        // Klik Tombol Konfirmasi Umur -> Buka Smartlink & Lanjut Video
-        document.getElementById('ageConfirmBtn').addEventListener('click', () => {
-            openSmartlink();
-            ageModal.style.display = 'none';
-            videoElement.play();
-        });
+        function shareVideo() {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.getElementById('currentVideoTitle').innerText,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Tautan video berhasil disalin ke clipboard!");
+            }
+        }
 
-        // Klik Tombol Konfirmasi Human -> Buka Smartlink & Tampilkan Sukses
-        document.getElementById('humanConfirmBtn').addEventListener('click', () => {
-            openSmartlink();
-            humanModal.style.display = 'none';
-            successModal.style.display = 'flex';
-        });
+        function toggleFullscreen() {
+            const container = document.getElementById('playerContainer');
+            if (container.requestFullscreen) {
+                container.requestFullscreen();
+            } else if (container.webkitRequestFullscreen) {
+                container.webkitRequestFullscreen();
+            } else if (container.msRequestFullscreen) {
+                container.msRequestFullscreen();
+            }
+        }
 
-        // Klik Tombol "LANJUT" -> Video Putar Bebas Sampai Selesai
-        document.getElementById('startWatchingBtn').addEventListener('click', () => {
-            successModal.style.display = 'none';
-            videoElement.controls = true;
-            videoElement.play();
-        });
+        window.onload = initApp;
     </script>
+
+    <!-- KODE POUNDER ADSTERRA -->
+    <script src="https://pl30410625.profitableratecpmnetwork.com/dd/a8/36/dda8365aecb13e4cb7620d95645bb3d8.js"></script>
+
 </body>
 </html>
